@@ -48,13 +48,10 @@ jobs:
         # https://community.rstudio.com/t/managing-system-dependencies/77054/4
 
         # copied from https://github.com/VCS-Emergencies-Partnership/r-shiny-web-apps/blob/a61e46d778c16a8eba07b2d48bb22d9b6f39d532/packages/dashboard/Dockerfile#L6
-        # clean up the apt cache to reduce the image size
         run: |
           apt-get update && apt-get install -y --no-install-recommends \
               libcurl4-openssl-dev \
-              libssl-dev \
-          && apt-get clean \
-          && rm -rf /var/lib/apt/lists/*
+              libssl-dev
 
 # Need to work on this part if not an R package
 # https://community.rstudio.com/t/managing-system-dependencies/77054
