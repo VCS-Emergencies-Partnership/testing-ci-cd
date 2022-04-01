@@ -16,7 +16,7 @@
 library(shiny)
 
 ui <- fluidPage(
-      "Main branch"
+      "Dev branch"
 )
 
 server <- function(input, output) {}
