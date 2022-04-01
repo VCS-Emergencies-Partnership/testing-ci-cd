@@ -5,7 +5,7 @@ rsconnect::setAccountInfo(
 )
 
 rsconnect::deployApp(
-  appName = Sys.getenv("SHINYAPPS_NAME_MAIN"),
+  appName = Sys.getenv("SHINYAPPS_NAME"),
   # exclude hidden files and renv directory (if present)
   appFiles = setdiff(list.files(), "renv"),
   account = Sys.getenv("SHINYAPPS_ACC_NAME")
