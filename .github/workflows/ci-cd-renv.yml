@@ -49,7 +49,7 @@ jobs:
 
         # copied from https://github.com/VCS-Emergencies-Partnership/r-shiny-web-apps/blob/a61e46d778c16a8eba07b2d48bb22d9b6f39d532/packages/dashboard/Dockerfile#L6
         run: |
-          sudo apt-get update && apt-get install -y --no-install-recommends \
+          sudo apt-get update && sudo apt-get install -y --no-install-recommends \
               libcurl4-openssl-dev \
               libssl-dev
 
