@@ -97,6 +97,7 @@ jobs:
           SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
           SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
           SHINYAPPS_NAME: ${{ secrets.SHINYAPPS_NAME_DEV }}
+        run: Rscript deploy/deploy-shinyapps.R
 
 # # Continuous Deplyoment part
 #       - name: Infuse with secrets
@@ -109,7 +110,3 @@ jobs:
 #           SHINYAPPS_NAME: ${{ secrets.SHINYAPPS_NAME_DEV }}" >> .Renviron
 
 
-      - name: Deploy to shinyapps.io
-        # Continuous deployment only for pushes to the main / master branch
-        if: github.ref == 'refs/heads/development' || github.ref == 'refs/heads/development'
-        run: Rscript deploy/deploy-shinyapps.R
