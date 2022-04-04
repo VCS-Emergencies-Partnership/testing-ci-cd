@@ -52,40 +52,38 @@ jobs:
       - name: Activate renv and restore packages with cache
         uses: r-lib/actions/setup-renv@v2
 
+################
+# METHOD 1
+################
+
 # Continuous Deplyoment part
       # - name: Deploy to shinyapps.io
       #   # Continuous deployment only for pushes to the main / master branch
       #   if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
       #   env:
-      #     SHINYAPPS_ACCOUNT: ${{ secrets.SHINYAPPS_ACCOUNT }}
+      #     SHINYAPPS_ACC_NAME: ${{ secrets.SHINYAPPS_ACC_NAME }}
       #     SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
       #     SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
       #     SHINYAPPS_NAME: ${{ secrets.SHINYAPPS_NAME_MASTER }}
       #   run: Rscript deploy/deploy-shinyapps.R
 
-# # Continuous Deplyoment part
-      # - name: Infuse with secrets
-      #   # Continuous deployment only for pushes to the main / master branch
-      #   if: github.ref == 'refs/heads/development' || github.ref == 'refs/heads/development'
-      #   env:
-      #     SHINYAPPS_ACC_NAME: ${{ secrets.SHINYAPPS_ACC_NAME }}
-      #     SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
-      #     SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
-      #     SHINYAPPS_NAME: ${{ secrets.SHINYAPPS_NAME_DEV }}
-      #   run: Rscript deploy/deploy-shinyapps.R
 
-# # Continuous Deplyoment part
-#       - name: Infuse with secrets
-#         # Continuous deployment only for pushes to the main / master branch
-#         if: github.ref == 'refs/heads/development' || github.ref == 'refs/heads/development'
-#         run: |
-#           echo "SHINYAPPS_ACCOUNT: ${{ secrets.SHINYAPPS_ACCOUNT }}
-#           SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
-#           SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
-#           SHINYAPPS_NAME: ${{ secrets.SHINYAPPS_NAME_DEV }}" >> .Renviron
+# Continuous Deplyoment part
+      - name: Method1 - Infuse with secrets & deploy
+        # Continuous deployment only for pushes to the main / master branch
+        if: github.ref == 'refs/heads/development' || github.ref == 'refs/heads/development'
+        env:
+          SHINYAPPS_ACC_NAME: ${{ secrets.SHINYAPPS_ACC_NAME }}
+          SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
+          SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
+          SHINYAPPS_NAME: ${{ secrets.SHINYAPPS_NAME_DEV }}
+        run: Rscript deploy/deploy-shinyapps.R
 
+################
+# METHOD 2
+################
 
-      - name: shinyapps credentials
+      - name: method2 - shinyapps credentials
         run: |
           Rscript -e 'rsconnect::setAccountInfo(
                 name = ${{ secrets.SHINYAPPS_ACC_NAME }},
@@ -93,11 +91,24 @@ jobs:
                 secret = ${{ secrets.SHINYAPPS_SECRET }}
               )'
 
-      - name: deploy
+      - name: method2 -deploy
         run: |
           Rscript -e ' appName = ${{ secrets.SHINYAPPS_NAME_DEV }},
               appFiles = setdiff(list.files(), "renv"),
               account = ${{ secrets.SHINYAPPS_ACC_NAME }}
 
+################
+# METHOD 3
+################
 
 
+- name: method3 - Create and populate .Renviron file
+  run: |
+    echo SHINYAPPS_ACC_NAME="$SHINYAPPS_ACC_NAME" >> ~/.Renviron
+    echo SHINYAPPS_TOKEN="$SHINYAPPS_TOKEN" >> ~/.Renviron
+    echo SHINYAPPS_SECRET="$SHINYAPPS_SECRET" >> ~/.Renviron
+    echo SHINYAPPS_NAME="$SHINYAPPS_NAME_DEV" >> ~/.Renviron
+    shell: bash
+
+- name: method3 - Run deploy script
+  run: Rscript deploy/deploy-shinyapps.R
