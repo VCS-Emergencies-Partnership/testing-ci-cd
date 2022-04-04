@@ -88,9 +88,9 @@ jobs:
       - name: shinyapps credentials
         run: |
           Rscript -e 'rsconnect::setAccountInfo(
-                name = ${{ secrets.SHINYAPPS_ACC_NAME }},
-                token = ${{ secrets.SHINYAPPS_TOKEN }},
-                secret = ${{ secrets.SHINYAPPS_SECRET }}
+                name = '${{ secrets.SHINYAPPS_ACC_NAME }}',
+                token = '${{ secrets.SHINYAPPS_TOKEN }}',
+                secret = '${{ secrets.SHINYAPPS_SECRET }}'
               )'
 
       - name: deploy
