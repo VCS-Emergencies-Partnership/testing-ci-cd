@@ -56,19 +56,17 @@ jobs:
 
 # Continuous Deplyoment part
       - name: Infuse with secrets & deploy to shinyapps.io for main branch
-        # Continuous deployment only for pushes to the main / master branch
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/main'
         env:
           SHINYAPPS_ACC_NAME: ${{ secrets.SHINYAPPS_ACC_NAME }}
           SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
           SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
-          SHINYAPPS_NAME: ${{ secrets.SHINYAPPS_NAME_MASTER }}
+          SHINYAPPS_NAME: ${{ secrets.SHINYAPPS_NAME_MAIN }}
         run: Rscript deploy/deploy-shinyapps.R
 
 
-      - name: mInfuse with secrets & deploy to shinyapps.io for devlopment branch
-        # Continuous deployment only for pushes to the main / master branch
-        if: github.ref == 'refs/heads/development' || github.ref == 'refs/heads/development'
+      - name: Infuse with secrets & deploy to shinyapps.io for devlopment branch
+        if: github.ref == 'refs/heads/development'
         env:
           SHINYAPPS_ACC_NAME: ${{ secrets.SHINYAPPS_ACC_NAME }}
           SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
