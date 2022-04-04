@@ -64,15 +64,15 @@ jobs:
       #   run: Rscript deploy/deploy-shinyapps.R
 
 # # Continuous Deplyoment part
-      - name: Infuse with secrets
-        # Continuous deployment only for pushes to the main / master branch
-        if: github.ref == 'refs/heads/development' || github.ref == 'refs/heads/development'
-        env:
-          SHINYAPPS_ACC_NAME: ${{ secrets.SHINYAPPS_ACC_NAME }}
-          SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
-          SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
-          SHINYAPPS_NAME: ${{ secrets.SHINYAPPS_NAME_DEV }}
-        run: Rscript deploy/deploy-shinyapps.R
+      # - name: Infuse with secrets
+      #   # Continuous deployment only for pushes to the main / master branch
+      #   if: github.ref == 'refs/heads/development' || github.ref == 'refs/heads/development'
+      #   env:
+      #     SHINYAPPS_ACC_NAME: ${{ secrets.SHINYAPPS_ACC_NAME }}
+      #     SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
+      #     SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
+      #     SHINYAPPS_NAME: ${{ secrets.SHINYAPPS_NAME_DEV }}
+      #   run: Rscript deploy/deploy-shinyapps.R
 
 # # Continuous Deplyoment part
 #       - name: Infuse with secrets
@@ -85,19 +85,19 @@ jobs:
 #           SHINYAPPS_NAME: ${{ secrets.SHINYAPPS_NAME_DEV }}" >> .Renviron
 
 
-      # - name: shinyapps credentials
-      #   run: |
-      #     Rscript -e 'rsconnect::setAccountInfo(
-      #           name = ${{ secrets.SHINYAPPS_AC }},
-      #           token = ${{ secrets.SHINYAPPS_TOKEN }},
-      #           secret = ${{ secrets.SHINYAPPS_NAME_DEV }}
-      #         )'
-      #
-      # - name: deploy
-      #   run: |
-      #     Rscript -e ' appName = ${{ secrets.SHINYAPPS_NAME_DEV }},
-      #         appFiles = setdiff(list.files(), "renv"),
-      #         account = ${{ secrets.SHINYAPPS_ACCOUNT }}
+      - name: shinyapps credentials
+        run: |
+          Rscript -e 'rsconnect::setAccountInfo(
+                name = ${{ secrets.SHINYAPPS_ACC_NAME }},
+                token = ${{ secrets.SHINYAPPS_TOKEN }},
+                secret = ${{ secrets.SHINYAPPS_SECRET }}
+              )'
+
+      - name: deploy
+        run: |
+          Rscript -e ' appName = ${{ secrets.SHINYAPPS_NAME_DEV }},
+              appFiles = setdiff(list.files(), "renv"),
+              account = ${{ secrets.SHINYAPPS_ACC_NAME }}
 
 
 
