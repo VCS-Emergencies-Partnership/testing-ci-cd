@@ -42,45 +42,35 @@ jobs:
           use-public-rspm: true
 
       - name: Install system dependencies
-        # This is not taken care of (yet) by r-lib/actions/setup-renv
-
-        # distro::distro() - get info on the system's Linux distribution
-        # remotes::system_requirements() -  vector of commands to run that will install system requirements for the queried operating system.
+        # May need certain dependecies to build R packages from source
+        # copied from https://github.com/VCS-Emergencies-Partnership/r-shiny-web-apps/blob/a61e46d778c16a8eba07b2d48bb22d9b6f39d532/packages/dashboard/Dockerfile#L6
         run: |
-          Rscript -e "install.packages(c('remotes', 'distro'))"
-          while read -r cmd
-          do
-            eval sudo $cmd
-          done < <(Rscript -e 'writeLines(with(distro::distro(), remotes::system_requirements(id, short_version)))')
+          sudo apt-get update && sudo apt-get install -y --no-install-recommends \
+              libcurl4-openssl-dev \
+              libssl-dev
 
       - name: Activate renv and restore packages with cache
         uses: r-lib/actions/setup-renv@v2
 
-# This version the app is not a package
-      # - name: Install R CMD check
-      #   run: install.packages("rcmdcheck")
-      #   shell: Rscript {0}
-      #
-      # - name: Check package
-      #   uses: r-lib/actions/check-r-package@v2
+# Secrets are added onto Github repo with no quotation marks
 
 # Continuous Deplyoment part
-      - name: Deploy to shinyapps.io
+      - name: Infuse with secrets & deploy to shinyapps.io for main branch
         # Continuous deployment only for pushes to the main / master branch
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         env:
-          SHINYAPPS_ACCOUNT: ${{ secrets.SHINYAPPS_ACCOUNT }}
+          SHINYAPPS_ACC_NAME: ${{ secrets.SHINYAPPS_ACC_NAME }}
           SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
           SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
           SHINYAPPS_NAME: ${{ secrets.SHINYAPPS_NAME_MASTER }}
         run: Rscript deploy/deploy-shinyapps.R
 
-# Continuous Deplyoment part
-      - name: Deploy to shinyapps.io
+
+      - name: mInfuse with secrets & deploy to shinyapps.io for devlopment branch
         # Continuous deployment only for pushes to the main / master branch
         if: github.ref == 'refs/heads/development' || github.ref == 'refs/heads/development'
         env:
-          SHINYAPPS_ACCOUNT: ${{ secrets.SHINYAPPS_ACCOUNT }}
+          SHINYAPPS_ACC_NAME: ${{ secrets.SHINYAPPS_ACC_NAME }}
           SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
           SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
           SHINYAPPS_NAME: ${{ secrets.SHINYAPPS_NAME_DEV }}
