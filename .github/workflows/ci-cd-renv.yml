@@ -47,6 +47,7 @@ jobs:
         # Finding system dependencies for a specific package
         # https://community.rstudio.com/t/managing-system-dependencies/77054/4
 
+        # May need certain dependecies to build R packages from source
         # copied from https://github.com/VCS-Emergencies-Partnership/r-shiny-web-apps/blob/a61e46d778c16a8eba07b2d48bb22d9b6f39d532/packages/dashboard/Dockerfile#L6
         run: |
           sudo apt-get update && sudo apt-get install -y --no-install-recommends \
@@ -87,13 +88,29 @@ jobs:
           SHINYAPPS_NAME: ${{ secrets.SHINYAPPS_NAME_MASTER }}
         run: Rscript deploy/deploy-shinyapps.R
 
+# # Continuous Deplyoment part
+#       - name: Deploy to shinyapps.io
+#         # Continuous deployment only for pushes to the main / master branch
+#         if: github.ref == 'refs/heads/development' || github.ref == 'refs/heads/development'
+#         env:
+#           SHINYAPPS_ACCOUNT: ${{ secrets.SHINYAPPS_ACCOUNT }}
+#           SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
+#           SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
+#           SHINYAPPS_NAME: ${{ secrets.SHINYAPPS_NAME_DEV }}
+#         run: Rscript deploy/deploy-shinyapps.R
+
 # Continuous Deplyoment part
+      - name: Infuse with secrets
+        # Continuous deployment only for pushes to the main / master branch
+        if: github.ref == 'refs/heads/development' || github.ref == 'refs/heads/development'
+        run: |
+          echo "SHINYAPPS_ACCOUNT: ${{ secrets.SHINYAPPS_ACCOUNT }}
+          SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
+          SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
+          SHINYAPPS_NAME: ${{ secrets.SHINYAPPS_NAME_DEV }}" >> .Renviron
+
+
       - name: Deploy to shinyapps.io
         # Continuous deployment only for pushes to the main / master branch
         if: github.ref == 'refs/heads/development' || github.ref == 'refs/heads/development'
-        env:
-          SHINYAPPS_ACCOUNT: ${{ secrets.SHINYAPPS_ACCOUNT }}
-          SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
-          SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
-          SHINYAPPS_NAME: ${{ secrets.SHINYAPPS_NAME_DEV }}
         run: Rscript deploy/deploy-shinyapps.R
