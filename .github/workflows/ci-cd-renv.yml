@@ -68,7 +68,7 @@ jobs:
         # Continuous deployment only for pushes to the main / master branch
         if: github.ref == 'refs/heads/development' || github.ref == 'refs/heads/development'
         env:
-          SHINYAPPS_ACCOUNT: ${{ secrets.SHINYAPPS_ACC_NAME }}
+          SHINYAPPS_ACC_NAME: ${{ secrets.SHINYAPPS_ACC_NAME }}
           SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
           SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
           SHINYAPPS_NAME: ${{ secrets.SHINYAPPS_NAME_DEV }}
