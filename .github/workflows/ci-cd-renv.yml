@@ -78,36 +78,35 @@ jobs:
       #   uses: r-lib/actions/check-r-package@v2
 
 # Continuous Deplyoment part
-      - name: Deploy to shinyapps.io
+      # - name: Deploy to shinyapps.io
+      #   # Continuous deployment only for pushes to the main / master branch
+      #   if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+      #   env:
+      #     SHINYAPPS_ACCOUNT: ${{ secrets.SHINYAPPS_ACCOUNT }}
+      #     SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
+      #     SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
+      #     SHINYAPPS_NAME: ${{ secrets.SHINYAPPS_NAME_MASTER }}
+      #   run: Rscript deploy/deploy-shinyapps.R
+
+# # Continuous Deplyoment part
+      - name: Infuse with secrets
         # Continuous deployment only for pushes to the main / master branch
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/development' || github.ref == 'refs/heads/development'
         env:
           SHINYAPPS_ACCOUNT: ${{ secrets.SHINYAPPS_ACCOUNT }}
           SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
           SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
-          SHINYAPPS_NAME: ${{ secrets.SHINYAPPS_NAME_MASTER }}
-        run: Rscript deploy/deploy-shinyapps.R
+          SHINYAPPS_NAME: ${{ secrets.SHINYAPPS_NAME_DEV }}
 
 # # Continuous Deplyoment part
-#       - name: Deploy to shinyapps.io
+#       - name: Infuse with secrets
 #         # Continuous deployment only for pushes to the main / master branch
 #         if: github.ref == 'refs/heads/development' || github.ref == 'refs/heads/development'
-#         env:
-#           SHINYAPPS_ACCOUNT: ${{ secrets.SHINYAPPS_ACCOUNT }}
+#         run: |
+#           echo "SHINYAPPS_ACCOUNT: ${{ secrets.SHINYAPPS_ACCOUNT }}
 #           SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
 #           SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
-#           SHINYAPPS_NAME: ${{ secrets.SHINYAPPS_NAME_DEV }}
-#         run: Rscript deploy/deploy-shinyapps.R
-
-# Continuous Deplyoment part
-      - name: Infuse with secrets
-        # Continuous deployment only for pushes to the main / master branch
-        if: github.ref == 'refs/heads/development' || github.ref == 'refs/heads/development'
-        run: |
-          echo "SHINYAPPS_ACCOUNT: ${{ secrets.SHINYAPPS_ACCOUNT }}
-          SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
-          SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
-          SHINYAPPS_NAME: ${{ secrets.SHINYAPPS_NAME_DEV }}" >> .Renviron
+#           SHINYAPPS_NAME: ${{ secrets.SHINYAPPS_NAME_DEV }}" >> .Renviron
 
 
       - name: Deploy to shinyapps.io
